@@ -70,13 +70,13 @@ class UploadController extends BaseController
             ];
         }
 
-        Event::fire(new FileUploading($file));
+        Event::dispatch(new FileUploading($file));
 
         $filename = $this->getFilename($file, $config);
 
         $result = app(FileUpload::class)->store($file, $disk, $filename, $directory);
 
-        if (!is_null($modified = Event::fire(new FileUploaded($file, $result, $strategy, $config), [], true))) {
+        if (!is_null($modified = Event::dispatch(new FileUploaded($file, $result, $strategy, $config), [], true))) {
             $result = $modified;
         }
 
@@ -109,7 +109,7 @@ class UploadController extends BaseController
     {
         $result = ['result' => app(FileUpload::class)->delete($request->file)];
 
-        Event::fire(new FileDeleted($request->file));
+        Event::dispatch(new FileDeleted($request->file));
 
         return $result;
     }
